@@ -13,6 +13,36 @@
     </div>
   <% end %>
 
+  <% if current_user.organisation.present? %>
+    <div class="filter-section">
+      <%= form_with url: departed_posts_path, method: :get, class: "filter-form" do |form| %>
+        <div class="filter-group">
+          <div class="filter-field">
+            <%= form.label :user_id, "Filter by Departed Employee:" %>
+            <%= form.select :user_id, 
+                options_for_select([["All Departed Employees", ""]] + @departed_users.map { |u| [u.name, u.id] }, params[:user_id]), 
+                {}, { class: "filter-select" } %>
+          </div>
+          
+          <div class="filter-field">
+            <%= form.label :start_date, "From:" %>
+            <%= form.date_field :start_date, value: params[:start_date], class: "filter-date" %>
+          </div>
+          
+          <div class="filter-field">
+            <%= form.label :end_date, "To:" %>
+            <%= form.date_field :end_date, value: params[:end_date], class: "filter-date" %>
+          </div>
+          
+          <div class="filter-actions">
+            <%= form.submit "Apply Filters", class: "filter-button" %>
+            <%= link_to "Clear Filters", departed_posts_path, class: "clear-filters" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if @departed_posts.any? %>
     <div class="posts-list">
       <% @departed_posts.each do |post| %>
@@ -170,5 +200,74 @@
   .btn-secondary {
     background-color: #f8f9fa;
     color: #333;
+  }
+  
+  /* Filter styles */
+  .filter-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-form {
+    width: 100%;
+  }
+  
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+  }
+  
+  .filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .filter-field label {
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  .filter-select, .filter-date {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+  }
+  
+  .filter-button {
+    background-color: #5D5FEF;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .filter-button:hover {
+    background-color: #4B4DCF;
+  }
+  
+  .clear-filters {
+    color: #6c757d;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .clear-filters:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .filter-actions {
+    display: flex;
+    gap: 10px;
   }
 </style> 

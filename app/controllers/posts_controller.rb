@@ -4,10 +4,30 @@ class PostsController < ApplicationController
   
   def index
     if current_user.organisation.present?
-      # Get posts from users in the same organisation
+      # Start with the base query for posts from users in the same organisation
       @posts = Post.joins(:user)
                    .where(users: { organisation_id: current_user.organisation_id, status: 'active' })
-                   .order(created_at: :desc)
+      
+      # Filter by user (employee) if specified
+      if params[:user_id].present? && !params[:user_id].empty?
+        @posts = @posts.where(user_id: params[:user_id])
+      end
+      
+      # Filter by date range if specified
+      if params[:start_date].present? && !params[:start_date].empty?
+        @posts = @posts.where('posts.created_at >= ?', params[:start_date])
+      end
+      
+      if params[:end_date].present? && !params[:end_date].empty?
+        @posts = @posts.where('posts.created_at <= ?', params[:end_date].to_date.end_of_day)
+      end
+      
+      # Get users for the filter dropdown
+      @users = User.where(organisation_id: current_user.organisation_id, status: 'active')
+                  .order(:name)
+      
+      # Apply final ordering
+      @posts = @posts.order(created_at: :desc)
     else
       # If user has no organisation, show only their posts
       @posts = current_user.posts.order(created_at: :desc)
@@ -17,10 +37,30 @@ class PostsController < ApplicationController
   
   def departed_posts
     if current_user.organisation.present?
-      # Get posts from departed users in the same organisation
+      # Start with base query for departed users in the same organisation
       @departed_posts = Post.joins(:user)
-                           .where(users: { organisation_id: current_user.organisation_id, status: 'departed' })
-                           .order(created_at: :desc)
+                          .where(users: { organisation_id: current_user.organisation_id, status: 'departed' })
+      
+      # Filter by user (employee) if specified
+      if params[:user_id].present? && !params[:user_id].empty?
+        @departed_posts = @departed_posts.where(user_id: params[:user_id])
+      end
+      
+      # Filter by date range if specified
+      if params[:start_date].present? && !params[:start_date].empty?
+        @departed_posts = @departed_posts.where('posts.created_at >= ?', params[:start_date])
+      end
+      
+      if params[:end_date].present? && !params[:end_date].empty?
+        @departed_posts = @departed_posts.where('posts.created_at <= ?', params[:end_date].to_date.end_of_day)
+      end
+      
+      # Get departed users for the filter dropdown
+      @departed_users = User.where(organisation_id: current_user.organisation_id, status: 'departed')
+                          .order(:name)
+      
+      # Apply final ordering
+      @departed_posts = @departed_posts.order(created_at: :desc)
     else
       @departed_posts = []
       @no_organisation = true
