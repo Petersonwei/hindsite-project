@@ -1,0 +1,38 @@
+<h1>New Organisation</h1>
+
+<%= form_with(model: @organisation) do |form| %>
+  <% if @organisation.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@organisation.errors.count, "error") %> prohibited this organisation from being saved:</h2>
+
+      <ul>
+        <% @organisation.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :country %>
+    <%= form.text_field :country %>
+  </div>
+
+  <div>
+    <%= form.label :language %>
+    <%= form.text_field :language %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<div>
+  <%= link_to "Back to organisations", organisations_path %>
+</div>
