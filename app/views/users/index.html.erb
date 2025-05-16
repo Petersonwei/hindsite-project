@@ -1,2 +1,137 @@
-<h1>Users#index</h1>
-<p>Find me in app/views/users/index.html.erb</p>
+<div class="users-container">
+  <div class="users-header">
+    <h1>Users</h1>
+    <% if logged_in? %>
+      <%= link_to "New User", new_user_path, class: "new-user-button" %>
+    <% end %>
+  </div>
+  
+  <div class="users-list">
+    <% @users.each do |user| %>
+      <div class="user-card">
+        <div class="user-info">
+          <h2><%= user.name %></h2>
+          <p><strong>Email:</strong> <%= user.email %></p>
+          <p>
+            <strong>Organisation:</strong> 
+            <% if user.organisation %>
+              <%= user.organisation.name %>
+            <% else %>
+              <span class="no-org">Not a member of any organisation</span>
+            <% end %>
+          </p>
+        </div>
+        
+        <div class="user-actions">
+          <% if current_user && current_user == user %>
+            <span class="user-status">This is you</span>
+          <% end %>
+          
+          <div class="action-buttons">
+            <%= link_to "View Profile", user, class: "user-button" %>
+            <% if current_user && current_user == user %>
+              <%= link_to "Edit Profile", edit_user_path(user), class: "user-button primary" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .users-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .new-user-button {
+    background-color: #5D5FEF;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  
+  .new-user-button:hover {
+    background-color: #4B4DCF;
+  }
+  
+  .users-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+  }
+  
+  .user-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-info {
+    flex-grow: 1;
+  }
+  
+  .user-info h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .no-org {
+    color: #856404;
+    font-style: italic;
+  }
+  
+  .user-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .user-status {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .user-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: #f8f9fa;
+    color: #333;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .user-button:hover {
+    background-color: #e9ecef;
+  }
+  
+  .user-button.primary {
+    background-color: #5D5FEF;
+    color: white;
+  }
+  
+  .user-button.primary:hover {
+    background-color: #4B4DCF;
+  }
+</style>
