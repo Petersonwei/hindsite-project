@@ -6,11 +6,23 @@ class PostsController < ApplicationController
     if current_user.organisation.present?
       # Get posts from users in the same organisation
       @posts = Post.joins(:user)
-                   .where(users: { organisation_id: current_user.organisation_id })
+                   .where(users: { organisation_id: current_user.organisation_id, status: 'active' })
                    .order(created_at: :desc)
     else
       # If user has no organisation, show only their posts
       @posts = current_user.posts.order(created_at: :desc)
+      @no_organisation = true
+    end
+  end
+  
+  def departed_posts
+    if current_user.organisation.present?
+      # Get posts from departed users in the same organisation
+      @departed_posts = Post.joins(:user)
+                           .where(users: { organisation_id: current_user.organisation_id, status: 'departed' })
+                           .order(created_at: :desc)
+    else
+      @departed_posts = []
       @no_organisation = true
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_102138) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_115743) do
   create_table "organisations", force: :cascade do |t|
     t.string "name"
     t.string "country"
@@ -34,7 +34,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_102138) do
     t.integer "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "active"
     t.index ["organisation_id"], name: "index_users_on_organisation_id"
+    t.index ["status"], name: "index_users_on_status"
   end
 
   add_foreign_key "posts", "users"

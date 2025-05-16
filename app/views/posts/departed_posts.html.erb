@@ -1,30 +1,26 @@
 <div class="posts-container">
   <div class="posts-header">
-    <h1>Posts</h1>
+    <h1>Posts from Departed Employees</h1>
     <div class="header-actions">
-      <% if logged_in? && current_user.organisation.present? %>
-        <%= link_to "View Departed Employee Posts", departed_posts_path, class: "departed-posts-link" %>
-      <% end %>
-      <% if logged_in? %>
-        <%= link_to "New Post", new_post_path, class: "new-post-button" %>
-      <% end %>
+      <%= link_to "Back to Active Posts", posts_path, class: "btn btn-secondary" %>
     </div>
   </div>
   
   <% if @no_organisation %>
     <div class="organisation-notice">
-      <p>You are not currently a member of any organisation. Join an organisation to see posts from other members.</p>
+      <p>You are not currently a member of any organisation. Join an organisation to see posts from departed members.</p>
       <%= link_to "View Available Organisations", organisations_path, class: "action-button" %>
     </div>
   <% end %>
 
-  <% if @posts.any? %>
+  <% if @departed_posts.any? %>
     <div class="posts-list">
-      <% @posts.each do |post| %>
-        <div class="post-card">
+      <% @departed_posts.each do |post| %>
+        <div class="post-card departed">
           <div class="post-header">
             <h3>
               <span class="post-author"><%= post.user.name %></span>
+              <span class="post-status">(Departed Employee)</span>
               <% if post.user.organisation.present? %>
                 <span class="post-org">from <%= post.user.organisation.name %></span>
               <% end %>
@@ -38,11 +34,11 @@
           
           <div class="post-actions">
             <%= link_to "View", post_path(post), class: "post-action" %>
-            <% if current_user && current_user == post.user %>
-              <%= link_to "Edit", edit_post_path(post), class: "post-action" %>
-              <%= link_to "Delete", post_path(post), 
-                          class: "post-action delete", 
-                          data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            <% if current_user.organisation && current_user.organisation.id == post.user.organisation_id && current_user.active? %>
+              <% if post.user.departed? %>
+                <%= link_to "Reactivate User", reactivate_user_path(post.user), method: :patch, class: "post-action reactivate", 
+                            data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user? Their posts will be visible again in the main feed." } %>
+              <% end %>
             <% end %>
           </div>
         </div>
@@ -50,16 +46,7 @@
     </div>
   <% else %>
     <div class="no-posts">
-      <p>No posts found. Be the first to create a post!</p>
-    </div>
-  <% end %>
-
-  <% unless logged_in? %>
-    <div class="login-notice">
-      <p>
-        <%= link_to "Login", login_path %> or 
-        <%= link_to "Sign Up", new_user_path %> to create posts
-      </p>
+      <p>No posts from departed employees.</p>
     </div>
   <% end %>
 </div>
@@ -78,16 +65,9 @@
     margin-bottom: 20px;
   }
   
-  .new-post-button {
-    background-color: #5D5FEF;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-  }
-  
-  .new-post-button:hover {
-    background-color: #4B4DCF;
+  .header-actions {
+    display: flex;
+    gap: 10px;
   }
   
   .organisation-notice {
@@ -119,6 +99,11 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
   
+  .post-card.departed {
+    border-left: 4px solid #6c757d;
+    background-color: #f8f9fa;
+  }
+  
   .post-header {
     display: flex;
     justify-content: space-between;
@@ -130,9 +115,16 @@
     font-weight: bold;
   }
   
+  .post-status {
+    color: #6c757d;
+    font-style: italic;
+    margin-left: 5px;
+  }
+  
   .post-org {
     font-size: 0.9em;
     color: #666;
+    margin-left: 5px;
   }
   
   .post-date {
@@ -155,35 +147,28 @@
     font-size: 0.9em;
   }
   
-  .post-action.delete {
-    color: #dc3545;
+  .post-action.reactivate {
+    color: #28a745;
   }
   
-  .no-posts, .login-notice {
+  .no-posts {
     background-color: #f8f9fa;
     padding: 15px;
     border-radius: 8px;
     text-align: center;
   }
   
-  .header-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .departed-posts-link {
-    color: #6c757d;
-    text-decoration: none;
-    font-size: 0.9em;
-    padding: 6px 12px;
-    border: 1px solid #6c757d;
+  .btn {
+    padding: 8px 16px;
     border-radius: 4px;
-    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
   }
   
-  .departed-posts-link:hover {
-    background-color: #6c757d;
-    color: white;
+  .btn-secondary {
+    background-color: #f8f9fa;
+    color: #333;
   }
-</style>
+</style> 

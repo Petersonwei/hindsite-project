@@ -13,6 +13,14 @@
           <h2><%= user.name %></h2>
           <p><strong>Email:</strong> <%= user.email %></p>
           <p>
+            <strong>Status:</strong> 
+            <% if user.active? %>
+              <span class="status-active">Active</span>
+            <% else %>
+              <span class="status-departed">Departed</span>
+            <% end %>
+          </p>
+          <p>
             <strong>Organisation:</strong> 
             <% if user.organisation %>
               <%= user.organisation.name %>
@@ -31,6 +39,14 @@
             <%= link_to "View Profile", user, class: "user-button" %>
             <% if current_user && current_user == user %>
               <%= link_to "Edit Profile", edit_user_path(user), class: "user-button primary" %>
+            <% elsif current_user && current_user.organisation.present? && current_user.organisation == user.organisation %>
+              <% if user.active? %>
+                <%= link_to "Mark as Departed", depart_user_path(user), class: "user-button warning", 
+                          data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this user as departed?" } %>
+              <% else %>
+                <%= link_to "Reactivate", reactivate_user_path(user), class: "user-button success", 
+                          data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user?" } %>
+              <% end %>
             <% end %>
           </div>
         </div>
@@ -133,5 +149,33 @@
   
   .user-button.primary:hover {
     background-color: #4B4DCF;
+  }
+  
+  .status-active {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .status-departed {
+    color: #6c757d;
+    font-style: italic;
+  }
+  
+  .user-button.warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .user-button.warning:hover {
+    background-color: #e0a800;
+  }
+  
+  .user-button.success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .user-button.success:hover {
+    background-color: #218838;
   }
 </style>

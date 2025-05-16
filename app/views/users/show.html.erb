@@ -5,6 +5,16 @@
       <div class="profile-actions">
         <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-primary" %>
       </div>
+    <% elsif current_user && current_user.organisation.present? && current_user.organisation == @user.organisation %>
+      <div class="profile-actions">
+        <% if @user.active? %>
+          <%= link_to "Mark as Departed", depart_user_path(@user), class: "btn btn-warning", 
+                        data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this user as departed? Their posts will be moved to the departed posts section." } %>
+        <% else %>
+          <%= link_to "Reactivate User", reactivate_user_path(@user), class: "btn btn-success", 
+                        data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user? Their posts will be visible again in the main feed." } %>
+        <% end %>
+      </div>
     <% end %>
   </div>
 
@@ -19,6 +29,16 @@
         <div class="detail-row">
           <div class="detail-label">Email:</div>
           <div class="detail-value"><%= @user.email %></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Status:</div>
+          <div class="detail-value">
+            <% if @user.active? %>
+              <span class="status-active">Active</span>
+            <% else %>
+              <span class="status-departed">Departed</span>
+            <% end %>
+          </div>
         </div>
         <div class="detail-row">
           <div class="detail-label">Organisation:</div>
@@ -214,5 +234,33 @@
 
   .back-link a:hover {
     text-decoration: underline;
+  }
+
+  .status-active {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .status-departed {
+    color: #6c757d;
+    font-style: italic;
+  }
+  
+  .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e0a800;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
   }
 </style>

@@ -57,6 +57,24 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: 'User was successfully deleted.'
   end
   
+  def depart
+    @user = User.find(params[:id])
+    if @user.depart!
+      redirect_to users_path, notice: "User was marked as departed. Their posts are now available in the departed posts section."
+    else
+      redirect_to users_path, alert: "Failed to mark user as departed."
+    end
+  end
+  
+  def reactivate
+    @user = User.find(params[:id])
+    if @user.reactivate!
+      redirect_to users_path, notice: "User was reactivated. Their posts are now visible in the main feed."
+    else
+      redirect_to departed_posts_path, alert: "Failed to reactivate user."
+    end
+  end
+  
   private
   
   def set_user

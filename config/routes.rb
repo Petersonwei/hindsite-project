@@ -12,8 +12,16 @@ Rails.application.routes.draw do
     post 'leave', on: :member, as: :leave
     post 'join', on: :member, as: :join
   end
-  resources :users
-  resources :posts
+  resources :users do
+    patch 'depart', on: :member
+    patch 'reactivate', on: :member
+  end
+  resources :posts do
+    get 'departed', on: :collection
+  end
+  
+  # Departed posts route
+  get '/departed-posts', to: 'posts#departed_posts', as: :departed_posts
   
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
