@@ -3,7 +3,16 @@ class PostsController < ApplicationController
   before_action :require_login
   
   def index
-    @posts = Post.all
+    if current_user.organisation.present?
+      # Get posts from users in the same organisation
+      @posts = Post.joins(:user)
+                   .where(users: { organisation_id: current_user.organisation_id })
+                   .order(created_at: :desc)
+    else
+      # If user has no organisation, show only their posts
+      @posts = current_user.posts.order(created_at: :desc)
+      @no_organisation = true
+    end
   end
 
   def show

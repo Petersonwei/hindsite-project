@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   
   # RESTful routes for our resources
-  resources :organisations
+  resources :organisations do
+    post 'leave', on: :member, as: :leave
+    post 'join', on: :member, as: :join
+  end
   resources :users
   resources :posts
   

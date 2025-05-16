@@ -1,2 +1,134 @@
-<h1>Organisations#index</h1>
-<p>Find me in app/views/organisations/index.html.erb</p>
+<div class="organisations-container">
+  <div class="organisations-header">
+    <h1>Organisations</h1>
+    <% if logged_in? %>
+      <%= link_to "Create New Organisation", new_organisation_path, class: "new-org-button" %>
+    <% end %>
+  </div>
+  
+  <% if current_user && current_user.organisation.nil? %>
+    <div class="info-box">
+      <p>You are not currently a member of any organisation. Join an organisation to interact with other members and share posts.</p>
+    </div>
+  <% end %>
+  
+  <div class="organisations-list">
+    <% @organisations.each do |org| %>
+      <div class="org-card">
+        <div class="org-info">
+          <h2><%= org.name %></h2>
+          <p><strong>Country:</strong> <%= org.country %></p>
+          <p><strong>Language:</strong> <%= org.language %></p>
+        </div>
+        
+        <div class="org-actions">
+          <% if current_user && current_user.organisation == org %>
+            <span class="org-status">You are a member</span>
+            <%= link_to "View Details", org, class: "org-button" %>
+          <% elsif current_user && current_user.organisation.nil? %>
+            <%= form_with(url: join_organisation_path(org), method: :post) do |form| %>
+              <%= form.submit "Join Organisation", class: "org-button primary" %>
+            <% end %>
+          <% else %>
+            <%= link_to "View Details", org, class: "org-button" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .organisations-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .organisations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .new-org-button {
+    background-color: #5D5FEF;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  
+  .new-org-button:hover {
+    background-color: #4B4DCF;
+  }
+  
+  .info-box {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  
+  .organisations-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+  }
+  
+  .org-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .org-info {
+    flex-grow: 1;
+  }
+  
+  .org-info h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .org-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .org-status {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .org-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: #f8f9fa;
+    color: #333;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .org-button:hover {
+    background-color: #e9ecef;
+  }
+  
+  .org-button.primary {
+    background-color: #5D5FEF;
+    color: white;
+  }
+  
+  .org-button.primary:hover {
+    background-color: #4B4DCF;
+  }
+</style>

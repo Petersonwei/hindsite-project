@@ -1,21 +1,97 @@
-<h1>Login</h1>
-
-<%= form_with(url: login_path, method: :post) do |form| %>
-  <div>
-    <%= form.label :email %>
-    <%= form.email_field :email, required: true %>
+<div class="auth-container">
+  <div class="logo">
+    <h1>HINDSITE<span>INC.</span></h1>
   </div>
 
-  <div>
-    <%= form.label :password %>
-    <%= form.password_field :password, required: true %>
-  </div>
+  <h2>Sign in to your account</h2>
 
-  <div>
-    <%= form.submit "Login" %>
-  </div>
-<% end %>
+  <%= form_with(url: login_path, method: :post, class: "auth-form") do |form| %>
+    <div class="form-group">
+      <%= form.label :email %>
+      <%= form.email_field :email, required: true, class: "form-control" %>
+    </div>
 
-<p>
-  Don't have an account? <%= link_to "Sign up", new_user_path %>
-</p>
+    <div class="form-group">
+      <%= form.label :password %>
+      <%= form.password_field :password, required: true, class: "form-control" %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Login", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <div class="auth-links">
+    <p>Don't have an account? <%= link_to "Sign up", new_user_path %></p>
+    <p><%= link_to "Forgot your password?", "#" %></p>
+  </div>
+</div>
+
+<style>
+  .auth-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .logo h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .logo span {
+    font-size: 16px;
+    vertical-align: super;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+  
+  .auth-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #5D5FEF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4B4DCF;
+  }
+  
+  .auth-links {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .auth-links a {
+    color: #5D5FEF;
+    text-decoration: none;
+  }
+</style>

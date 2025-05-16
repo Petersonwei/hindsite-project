@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  belongs_to :organisation
+  belongs_to :organisation, optional: true
   has_many :posts, dependent: :destroy
   
   has_secure_password

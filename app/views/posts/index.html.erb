@@ -1,33 +1,163 @@
-<h1>Posts</h1>
-
-<% if logged_in? %>
-  <div>
-    <%= link_to "New Post", new_post_path %>
+<div class="posts-container">
+  <div class="posts-header">
+    <h1>Posts</h1>
+    <% if logged_in? %>
+      <%= link_to "New Post", new_post_path, class: "new-post-button" %>
+    <% end %>
   </div>
-<% end %>
+  
+  <% if @no_organisation %>
+    <div class="organisation-notice">
+      <p>You are not currently a member of any organisation. Join an organisation to see posts from other members.</p>
+      <%= link_to "View Available Organisations", organisations_path, class: "action-button" %>
+    </div>
+  <% end %>
 
-<div>
-  <% @posts.each do |post| %>
-    <div>
-      <h3>Post by <%= post.user.name %> from <%= post.user.organisation.name %></h3>
-      <p><%= post.description %></p>
-      <p><%= link_to "View", post_path(post) %></p>
-      <% if current_user && current_user == post.user %>
-        <p>
-          <%= link_to "Edit", edit_post_path(post) %> |
-          <%= link_to "Delete", post_path(post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-        </p>
+  <% if @posts.any? %>
+    <div class="posts-list">
+      <% @posts.each do |post| %>
+        <div class="post-card">
+          <div class="post-header">
+            <h3>
+              <span class="post-author"><%= post.user.name %></span>
+              <% if post.user.organisation.present? %>
+                <span class="post-org">from <%= post.user.organisation.name %></span>
+              <% end %>
+            </h3>
+            <span class="post-date"><%= post.created_at.strftime("%B %d, %Y") %></span>
+          </div>
+          
+          <div class="post-content">
+            <p><%= post.description %></p>
+          </div>
+          
+          <div class="post-actions">
+            <%= link_to "View", post_path(post), class: "post-action" %>
+            <% if current_user && current_user == post.user %>
+              <%= link_to "Edit", edit_post_path(post), class: "post-action" %>
+              <%= link_to "Delete", post_path(post), 
+                          class: "post-action delete", 
+                          data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            <% end %>
+          </div>
+        </div>
       <% end %>
     </div>
-    <hr>
+  <% else %>
+    <div class="no-posts">
+      <p>No posts found. Be the first to create a post!</p>
+    </div>
+  <% end %>
+
+  <% unless logged_in? %>
+    <div class="login-notice">
+      <p>
+        <%= link_to "Login", login_path %> or 
+        <%= link_to "Sign Up", new_user_path %> to create posts
+      </p>
+    </div>
   <% end %>
 </div>
 
-<% unless logged_in? %>
-  <div>
-    <p>
-      <%= link_to "Login", login_path %> or 
-      <%= link_to "Sign Up", new_user_path %> to create posts
-    </p>
-  </div>
-<% end %>
+<style>
+  .posts-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .new-post-button {
+    background-color: #5D5FEF;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  
+  .new-post-button:hover {
+    background-color: #4B4DCF;
+  }
+  
+  .organisation-notice {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .action-button {
+    background-color: #5D5FEF;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+  
+  .post-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .post-author {
+    font-weight: bold;
+  }
+  
+  .post-org {
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .post-date {
+    font-size: 0.8em;
+    color: #999;
+  }
+  
+  .post-content {
+    margin-bottom: 15px;
+  }
+  
+  .post-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .post-action {
+    text-decoration: none;
+    color: #5D5FEF;
+    font-size: 0.9em;
+  }
+  
+  .post-action.delete {
+    color: #dc3545;
+  }
+  
+  .no-posts, .login-notice {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+</style>

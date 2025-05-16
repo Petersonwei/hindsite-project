@@ -1,2 +1,88 @@
-<h1>Organisations#show</h1>
-<p>Find me in app/views/organisations/show.html.erb</p>
+<div class="organisation-container">
+  <h1><%= @organisation.name %></h1>
+  
+  <div class="organisation-details">
+    <p><strong>Country:</strong> <%= @organisation.country %></p>
+    <p><strong>Language:</strong> <%= @organisation.language %></p>
+  </div>
+  
+  <div class="action-cards">
+    <div class="action-card">
+      <h3>View Posts</h3>
+      <p>See all posts from your organisation members</p>
+      <%= link_to "View Posts", posts_path, class: "action-button" %>
+    </div>
+    
+    <div class="action-card">
+      <h3>Edit Organisation</h3>
+      <p>Update organisation details and settings</p>
+      <%= link_to "Edit Organisation", edit_organisation_path(@organisation), class: "action-button" %>
+    </div>
+    
+    <div class="action-card">
+      <h3>Leave Organisation</h3>
+      <p>Leave this organisation (will delete your posts)</p>
+      <%= link_to "Leave Organisation", leave_organisation_path(@organisation), 
+                  method: :post, 
+                  data: { turbo_confirm: "Are you sure? This will delete all your posts." },
+                  class: "action-button danger" %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .organisation-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .organisation-details {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .action-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .action-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .action-card h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .action-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #5D5FEF;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  
+  .action-button:hover {
+    background-color: #4B4DCF;
+  }
+  
+  .action-button.danger {
+    background-color: #dc3545;
+  }
+  
+  .action-button.danger:hover {
+    background-color: #bd2130;
+  }
+</style>
