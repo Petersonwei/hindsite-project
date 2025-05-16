@@ -26,4 +26,8 @@ class User < ApplicationRecord
   def reactivate!
     update(status: 'active')
   end
+  
+  def organisation_name
+    organisation&.name
+  end
 end

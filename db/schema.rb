@@ -31,7 +31,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_115743) do
     t.string "name"
     t.string "email"
     t.string "password_digest"
-    t.integer "organisation_id", null: false
+    t.integer "organisation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "active"

@@ -1,7 +1,18 @@
 Rails.application.routes.draw do
-  # Root path
+  # Root path must be first to ensure it has priority
   root "posts#index"
   
+  # API routes
+  namespace :api do
+    namespace :v1 do
+      resources :users, only: [:index, :show]
+    end
+  end
+
+  # API Documentation routes
+  get '/api-docs', to: redirect('/api-docs/index.html')
+  get '/api-docs/index.html', to: 'api_docs#index'
+
   # Session routes for authentication
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
@@ -17,7 +28,7 @@ Rails.application.routes.draw do
     patch 'reactivate', on: :member
   end
   resources :posts do
-    get 'departed', on: :collection
+    get 'departed', on: :collection, as: :departed_collection
   end
   
   # Departed posts route

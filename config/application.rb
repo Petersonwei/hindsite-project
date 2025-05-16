@@ -6,6 +6,10 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Explicitly require rswag gems to ensure they're loaded
+require 'rswag/api' if Gem::Specification.find_all_by_name('rswag-api').any?
+require 'rswag/ui' if Gem::Specification.find_all_by_name('rswag-ui').any?
+
 module Hindsite
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

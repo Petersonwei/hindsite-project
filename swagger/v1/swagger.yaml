@@ -1,0 +1,110 @@
+---
+openapi: 3.0.1
+info:
+  title: Hindsite API Documentation
+  version: v1
+  description: Hindsite is a knowledge sharing platform that allows employees to post
+    and retrieve information within organizations.
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+paths:
+  "/api/v1/users":
+    get:
+      summary: Retrieves all active users
+      tags:
+      - Users
+      responses:
+        '200':
+          description: users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/User"
+  "/api/v1/users/{id}":
+    get:
+      summary: Retrieves a specific user
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: User ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: user found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john@example.com
+        organisation_id:
+          type: integer
+          example: 1
+        organisation_name:
+          type: string
+          example: ACME Corp
+        status:
+          type: string
+          enum:
+          - active
+          - departed
+          example: active
+      required:
+      - id
+      - name
+      - email
+      - status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+servers:
+- url: "{protocol}://{hostname}:{port}"
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    hostname:
+      enum:
+      - localhost
+      - hindsite.example.com
+      default: localhost
+    port:
+      enum:
+      - '3000'
+      - '80'
+      - '443'
+      default: '3000'
