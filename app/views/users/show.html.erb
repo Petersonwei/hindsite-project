@@ -41,8 +41,8 @@
         <% @user.posts.order(created_at: :desc).each do |post| %>
           <div class="post-card">
             <div class="post-content">
-              <h4><%= post.title %></h4>
-              <p class="post-body"><%= post.content %></p>
+              <h4>Post #<%= post.id %></h4>
+              <p class="post-body"><%= post.description %></p>
               <p class="post-date">Posted on <%= post.created_at.strftime("%B %d, %Y") %></p>
             </div>
             <% if current_user && current_user == @user %>
