@@ -1,16 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  description: MyText
   user: one
   organisation: one
+  is_primary: true
 
 two:
-  description: MyText
   user: two
   organisation: two
+  is_primary: true
 
-admin_post:
-  description: Admin post
+admin_org_one:
   user: admin
   organisation: one
+  is_primary: true
+
+admin_org_two:
+  user: admin
+  organisation: two
+  is_primary: false 
