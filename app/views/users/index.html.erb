@@ -10,7 +10,7 @@
     </div>
     
     <div class="hero bg-dark mb-6" style="border-radius: var(--radius); height: 200px; overflow: hidden;">
-      <img src="/night mining work.jpg" alt="Mining team" class="hero-bg-image" style="object-position: center 30%;">
+      <img src="/mining driver.jpg" alt="Mining driver" class="hero-bg-image" style="object-position: center 35%;">
       <div class="container py-6">
         <div class="hero-content">
           <h2 class="text-2xl font-bold text-white mb-2">Team Directory</h2>
@@ -119,19 +119,23 @@
                         <%= link_to edit_user_path(user), class: "btn btn-secondary btn-sm" do %>
                           <i class="fas fa-pencil-alt"></i>
                         <% end %>
-                      <% elsif current_user && current_user.organisation.present? && user.organisations.include?(current_user.organisation) %>
-              <% if user.active? %>
-                          <%= link_to depart_user_path(user), class: "btn btn-destructive btn-sm", 
-                                    data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this user as departed?" } do %>
-                            <i class="fas fa-user-slash"></i>
+                      <% elsif current_user && user.organisations.any? && (user.organisations & current_user.organisations).any? %>
+                        <% if user.active? %>
+                          <%= form_with url: depart_user_path(user), method: :patch, class: "inline-block" do %>
+                            <button type="submit" class="btn btn-destructive btn-sm" 
+                                    onclick="return confirm('Are you sure you want to mark this user as departed?')">
+                              <i class="fas fa-user-slash"></i>
+                            </button>
                           <% end %>
-              <% else %>
-                          <%= link_to reactivate_user_path(user), class: "btn btn-primary btn-sm", 
-                                    data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user?" } do %>
-                            <i class="fas fa-user-check"></i>
+                        <% else %>
+                          <%= form_with url: reactivate_user_path(user), method: :patch, class: "inline-block" do %>
+                            <button type="submit" class="btn btn-primary btn-sm" 
+                                    onclick="return confirm('Are you sure you want to reactivate this user?')">
+                              <i class="fas fa-user-check"></i>
+                            </button>
                           <% end %>
-              <% end %>
-            <% end %>
+                        <% end %>
+                      <% end %>
           </div>
                   </td>
                 </tr>

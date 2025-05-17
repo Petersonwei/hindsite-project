@@ -6,86 +6,109 @@ class PostsController < ApplicationController
     # Get user's organizations
     @user_organisations = current_user.organisations
     
-    # Get the selected organization (default to primary if not specified)
+    # Get the selected organization or show posts from all user's organizations
     if params[:organisation_id].present?
       @organisation = Organisation.find(params[:organisation_id])
-    else
-      @organisation = current_user.primary_organisation
-    end
-    
-    if @organisation.present? && current_user.organisations.include?(@organisation)
+      # Check if user belongs to the organization
+      unless current_user.organisations.include?(@organisation)
+        flash[:alert] = "You are not authorized to view posts from this organization."
+        redirect_to posts_path and return
+      end
+      
       # Start with the base query for posts from this organisation
       @posts = Post.where(organisation_id: @organisation.id)
       
-      # Filter by user (employee) if specified
-      if params[:user_id].present? && !params[:user_id].empty?
-        @posts = @posts.where(user_id: params[:user_id])
-      end
-      
-      # Filter by date range if specified
-      if params[:start_date].present? && !params[:start_date].empty?
-        @posts = @posts.where('posts.created_at >= ?', params[:start_date])
-      end
-      
-      if params[:end_date].present? && !params[:end_date].empty?
-        @posts = @posts.where('posts.created_at <= ?', params[:end_date].to_date.end_of_day)
-      end
-      
       # Get users for the filter dropdown (members of this org)
       @users = @organisation.members.where(status: 'active').order(:name)
-      
-      # Apply final ordering
-      @posts = @posts.order(created_at: :desc)
     else
-      # If user has no organisations, show only their posts
-      @posts = current_user.posts.order(created_at: :desc)
-      @no_organisation = true
+      # Show posts from all of the user's organizations
+      @show_all = true
+      organisation_ids = current_user.organisations.pluck(:id)
+      @posts = Post.where(organisation_id: organisation_ids)
+      
+      # Get users for the filter dropdown (members of all user's orgs)
+      @users = User.joins(:user_organisations)
+                  .where(user_organisations: { organisation_id: organisation_ids })
+                  .where(status: 'active')
+                  .distinct
+                  .order(:name)
     end
+    
+    # Filter by user (employee) if specified
+    if params[:user_id].present? && !params[:user_id].empty?
+      @posts = @posts.where(user_id: params[:user_id])
+    end
+    
+    # Filter by date range if specified
+    if params[:start_date].present? && !params[:start_date].empty?
+      @posts = @posts.where('posts.created_at >= ?', params[:start_date])
+    end
+    
+    if params[:end_date].present? && !params[:end_date].empty?
+      @posts = @posts.where('posts.created_at <= ?', params[:end_date].to_date.end_of_day)
+    end
+    
+    # Apply final ordering
+    @posts = @posts.order(created_at: :desc)
   end
   
   def departed_posts
     # Get user's organizations
     @user_organisations = current_user.organisations
     
-    # Get the selected organization (default to primary if not specified)
+    # Get the selected organization or show departed posts from all user's organizations
     if params[:organisation_id].present?
       @organisation = Organisation.find(params[:organisation_id])
-    else
-      @organisation = current_user.primary_organisation
-    end
-    
-    if @organisation.present? && current_user.organisations.include?(@organisation)
+      # Check if user belongs to the organization
+      unless current_user.organisations.include?(@organisation)
+        flash[:alert] = "You are not authorized to view posts from this organization."
+        redirect_to posts_path and return
+      end
+      
       # Get departed users in this organisation
       departed_users = User.joins(:user_organisations)
-                          .where(user_organisations: { organisation_id: @organisation.id })
-                          .where(status: 'departed')
+                        .where(user_organisations: { organisation_id: @organisation.id })
+                        .where(status: 'departed')
       
       # Get their posts in this organization
       @departed_posts = Post.where(user_id: departed_users.pluck(:id), organisation_id: @organisation.id)
       
-      # Filter by user (employee) if specified
-      if params[:user_id].present? && !params[:user_id].empty?
-        @departed_posts = @departed_posts.where(user_id: params[:user_id])
-      end
+      # Get departed users for the filter dropdown
+      @departed_users = departed_users.order(:name)
+    else
+      # Show departed posts from all of the user's organizations
+      @show_all = true
+      organisation_ids = current_user.organisations.pluck(:id)
       
-      # Filter by date range if specified
-      if params[:start_date].present? && !params[:start_date].empty?
-        @departed_posts = @departed_posts.where('posts.created_at >= ?', params[:start_date])
-      end
+      # Get departed users across all user's organizations
+      departed_users = User.joins(:user_organisations)
+                        .where(user_organisations: { organisation_id: organisation_ids })
+                        .where(status: 'departed')
+                        .distinct
       
-      if params[:end_date].present? && !params[:end_date].empty?
-        @departed_posts = @departed_posts.where('posts.created_at <= ?', params[:end_date].to_date.end_of_day)
-      end
+      # Get departed posts from all user's organizations
+      @departed_posts = Post.where(user_id: departed_users.pluck(:id), organisation_id: organisation_ids)
       
       # Get departed users for the filter dropdown
       @departed_users = departed_users.order(:name)
-      
-      # Apply final ordering
-      @departed_posts = @departed_posts.order(created_at: :desc)
-    else
-      @departed_posts = []
-      @no_organisation = true
     end
+    
+    # Filter by user (employee) if specified
+    if params[:user_id].present? && !params[:user_id].empty?
+      @departed_posts = @departed_posts.where(user_id: params[:user_id])
+    end
+    
+    # Filter by date range if specified
+    if params[:start_date].present? && !params[:start_date].empty?
+      @departed_posts = @departed_posts.where('posts.created_at >= ?', params[:start_date])
+    end
+    
+    if params[:end_date].present? && !params[:end_date].empty?
+      @departed_posts = @departed_posts.where('posts.created_at <= ?', params[:end_date].to_date.end_of_day)
+    end
+    
+    # Apply final ordering
+    @departed_posts = @departed_posts.order(created_at: :desc)
   end
 
   def show

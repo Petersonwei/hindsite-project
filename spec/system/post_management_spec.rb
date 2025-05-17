@@ -166,12 +166,12 @@ RSpec.describe "Post Management", type: :system do
       Post.create!(description: "A post by a user without org", user: user_without_org)
       
       # Log out and log in as the user without org
-      click_link "Logout"
+      find('button', text: 'Logout').click
       
       visit login_path
       fill_in "Email", with: user_without_org.email
       fill_in "Password", with: "password123"
-      click_button "Log In"
+      click_button "Login"
       
       visit posts_path
       
