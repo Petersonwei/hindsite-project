@@ -5,6 +5,7 @@ class ApiDocsController < ApplicationController
 <html>
 <head>
   <title>Hindsite API Documentation</title>
+  <link rel="icon" href="/icon.png" type="image/png">
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -13,6 +14,18 @@ class ApiDocsController < ApplicationController
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+    }
+    .nav-logo {
+      max-height: 50px;
+      margin-right: 15px;
+      vertical-align: middle;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
     }
     .endpoint {
       background-color: #f8f9fa;
@@ -90,7 +103,11 @@ class ApiDocsController < ApplicationController
   </style>
 </head>
 <body>
-  <h1>Hindsite API Documentation</h1>
+  <div class="header">
+    <img src="/HINDSITE-NAV.svg" alt="Hindsite Logo" class="nav-logo">
+    <h1>Hindsite API Documentation</h1>
+  </div>
+  
   <p>This documentation describes the Hindsite API endpoints and how to use them.</p>
   
   <!-- API Version Info -->

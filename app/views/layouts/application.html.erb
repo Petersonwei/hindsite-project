@@ -13,19 +13,27 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="/HINDSITE-NAV.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/HINDSITE-NAV.svg">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <style>
+      .navbar-brand img {
+        height: 40px;
+        vertical-align: middle;
+      }
+    </style>
   </head>
 
   <body>
     <header>
       <nav class="navbar container">
-        <%= link_to "Hindsite", root_path, class: "navbar-brand" %>
+        <%= link_to root_path, class: "navbar-brand" do %>
+          <img src="/HINDSITE-NAV.svg" alt="Hindsite Logo">
+        <% end %>
         <div class="nav-links">
           <% if logged_in? %>
             <%= link_to "Posts", posts_path, class: "nav-link #{current_page?(posts_path) ? 'active' : ''}" %>
@@ -63,7 +71,7 @@
       <div class="container">
         <div class="flex justify-between items-center">
           <div>
-            <h3 class="mb-2">Hindsite</h3>
+            <img src="/HINDSITE-NAV.svg" alt="Hindsite Logo" style="height: 30px; margin-bottom: 8px;">
             <p class="text-sm">Organisation Management System</p>
           </div>
           <div>
