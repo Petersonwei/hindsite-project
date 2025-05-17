@@ -1,63 +1,125 @@
 <div class="section">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="section-title">Organisations</h1>
-    <% if logged_in? %>
-      <%= link_to "Create New Organisation", new_organisation_path, class: "btn btn-primary" %>
-    <% end %>
-  </div>
-  
-  <% if current_user && current_user.organisations.empty? %>
-    <div class="alert alert-info mb-6">
-      <p>You are not currently a member of any organisation. Join an organisation to interact with other members and share posts.</p>
-    </div>
-  <% end %>
-  
-  <% if @user_organisations.present? && @user_organisations.any? %>
-    <h2 class="section-subtitle mb-4">Your Organisations</h2>
-    <div class="grid sm:grid-cols-2 gap-4 mb-8">
-      <% @user_organisations.each do |org| %>
-        <div class="card border-l-4 <%= current_user.primary_organisation == org ? 'border-l-primary' : 'border-l-muted' %>">
-          <div class="card-header">
-            <h2 class="card-title"><%= org.name %></h2>
-            <p class="card-description">
-              <span class="badge badge-outline"><%= org.country %></span>
-              <span class="badge badge-outline ml-2"><%= org.language %></span>
-              <% if current_user.primary_organisation == org %>
-                <span class="badge badge-primary ml-2">Primary</span>
-              <% end %>
-            </p>
-          </div>
-          
-          <div class="card-footer">
-            <%= link_to "View Details", org, class: "btn btn-secondary" %>
-            <%= link_to "View Posts", posts_path(organisation_id: org.id), class: "btn btn-primary" %>
-          </div>
-        </div>
+  <div class="container">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="section-title">Organisations</h1>
+      <% if logged_in? %>
+        <%= link_to new_organisation_path, class: "btn btn-primary" do %>
+          <i class="fas fa-plus-circle mr-1"></i> Create New Organisation
+        <% end %>
       <% end %>
     </div>
-  <% end %>
-  
-  <h2 class="section-subtitle mb-4">All Organisations</h2>
-  <div class="grid sm:grid-cols-2 gap-4">
-    <% @organisations.each do |org| %>
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title"><%= org.name %></h2>
-          <p class="card-description">
-            <span class="badge badge-outline"><%= org.country %></span>
-            <span class="badge badge-outline ml-2"><%= org.language %></span>
-          </p>
+    
+    <% if current_user && current_user.organisations.empty? %>
+      <div class="alert alert-info mb-6">
+        <p><i class="fas fa-info-circle mr-1"></i> You are not currently a member of any organisation. Join an organisation to interact with other members and share posts.</p>
+      </div>
+    <% end %>
+
+    <div class="hero bg-dark mb-6" style="border-radius: var(--radius); height: 200px; overflow: hidden;">
+      <img src="/mining worker.jpg" alt="Mining worker" class="hero-bg-image" style="object-position: center 25%;">
+      <div class="container py-8">
+        <div class="hero-content">
+          <h2 class="text-2xl font-bold text-white mb-2">Find Your Team</h2>
+          <p class="text-white opacity-90">Join an organization to collaborate with teams and share knowledge</p>
         </div>
-        
-        <div class="card-footer">
-          <% if current_user && current_user.organisations.include?(org) %>
-            <%= link_to "View Details", org, class: "btn btn-secondary" %>
-          <% elsif current_user %>
-            <%= link_to "View Details", org, class: "btn btn-secondary mr-2" %>
-            <%= button_to "Join Organisation", join_organisation_path(org), method: :post, class: "btn btn-primary" %>
-          <% else %>
-            <%= link_to "View Details", org, class: "btn btn-secondary" %>
+      </div>
+    </div>
+    
+    <% if @user_organisations.present? && @user_organisations.any? %>
+      <div class="mb-8">
+        <h2 class="section-subtitle mb-4">
+          <i class="fas fa-star text-secondary mr-2"></i>Your Organisations
+        </h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @user_organisations.each do |org| %>
+            <div class="card" style="<%= current_user.primary_organisation == org ? 'border-left: 4px solid hsl(var(--secondary));' : '' %>">
+              <div class="card-header">
+                <h2 class="card-title">
+                  <i class="fas fa-building mr-2 text-primary"></i><%= org.name %>
+                </h2>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <span class="badge badge-outline"><i class="fas fa-globe-americas mr-1"></i> <%= org.country %></span>
+                  <span class="badge badge-outline"><i class="fas fa-language mr-1"></i> <%= org.language %></span>
+                  <% if current_user.primary_organisation == org %>
+                    <span class="badge badge-secondary"><i class="fas fa-check mr-1"></i> Primary</span>
+                  <% end %>
+                </div>
+              </div>
+              
+              <div class="card-footer">
+                <%= link_to org, class: "btn btn-secondary" do %>
+                  <i class="fas fa-info-circle mr-1"></i> Details
+                <% end %>
+                <%= link_to posts_path(organisation_id: org.id), class: "btn btn-primary" do %>
+                  <i class="fas fa-clipboard-list mr-1"></i> Posts
+                <% end %>
+              </div>
+            </div>
           <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="section-subtitle">
+          <i class="fas fa-building text-primary mr-2"></i>All Organisations
+        </h2>
+        <div class="text-sm text-muted-foreground"><%= @organisations.count %> organisations available</div>
+      </div>
+      
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @organisations.each do |org| %>
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title flex items-center">
+                <i class="fas fa-building mr-2 text-primary"></i><%= org.name %>
+              </h2>
+              <div class="flex flex-wrap gap-2 mt-2">
+                <span class="badge badge-outline"><i class="fas fa-globe-americas mr-1"></i> <%= org.country %></span>
+                <span class="badge badge-outline"><i class="fas fa-language mr-1"></i> <%= org.language %></span>
+                <% if current_user && current_user.organisations.include?(org) %>
+                  <span class="badge badge-primary"><i class="fas fa-user-check mr-1"></i> Member</span>
+                <% end %>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <% if current_user && current_user.organisations.include?(org) %>
+                <%= link_to org, class: "btn btn-secondary" do %>
+                  <i class="fas fa-info-circle mr-1"></i> View Details
+                <% end %>
+              <% elsif current_user %>
+                <%= link_to org, class: "btn btn-outline mr-2" do %>
+                  <i class="fas fa-info-circle mr-1"></i> Details
+                <% end %>
+                <%= button_to join_organisation_path(org), method: :post, class: "btn btn-primary" do %>
+                  <i class="fas fa-sign-in-alt mr-1"></i> Join
+                <% end %>
+              <% else %>
+                <%= link_to org, class: "btn btn-secondary" do %>
+                  <i class="fas fa-info-circle mr-1"></i> View Details
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <% unless logged_in? %>
+      <div class="card mt-6 py-6">
+        <div class="card-content text-center">
+          <h3 class="text-xl font-semibold mb-4">Ready to join?</h3>
+          <p class="mb-4">Create an account to join organizations and start collaborating with teams.</p>
+          <div class="flex gap-4 justify-center">
+            <%= link_to login_path, class: "btn btn-secondary" do %>
+              <i class="fas fa-sign-in-alt mr-1"></i> Login
+            <% end %>
+            <%= link_to new_user_path, class: "btn btn-primary" do %>
+              <i class="fas fa-user-plus mr-1"></i> Sign Up
+            <% end %>
+          </div>
         </div>
       </div>
     <% end %>
