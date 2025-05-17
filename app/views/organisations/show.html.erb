@@ -1,89 +1,63 @@
-<div class="organisation-container">
-  <h1><%= @organisation.name %></h1>
-  
-  <div class="organisation-details">
-    <p><strong>Country:</strong> <%= @organisation.country %></p>
-    <p><strong>Language:</strong> <%= @organisation.language %></p>
+<div class="section">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="section-title"><%= @organisation.name %></h1>
+    <div>
+      <%= link_to "Back to Organisations", organisations_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-header">
+      <h2 class="card-title">Organisation Details</h2>
+    </div>
+    <div class="card-content">
+      <div class="grid gap-2">
+        <div class="flex">
+          <div class="font-medium w-28">Country:</div>
+          <div class="text-foreground"><%= @organisation.country %></div>
+        </div>
+        <div class="flex">
+          <div class="font-medium w-28">Language:</div>
+          <div class="text-foreground"><%= @organisation.language %></div>
+        </div>
+      </div>
+    </div>
   </div>
   
-  <div class="action-cards">
-    <div class="action-card">
-      <h3>View Posts</h3>
-      <p>See all posts from your organisation members</p>
-      <%= link_to "View Posts", posts_path, class: "action-button" %>
+  <h2 class="section-title mb-4">Actions</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">View Posts</h3>
+        <p class="card-description">See all posts from your organisation members</p>
+      </div>
+      <div class="card-footer">
+        <%= link_to "View Posts", posts_path, class: "btn btn-primary" %>
+      </div>
     </div>
     
-    <div class="action-card">
-      <h3>Edit Organisation</h3>
-      <p>Update organisation details and settings</p>
-      <%= link_to "Edit Organisation", edit_organisation_path(@organisation), class: "action-button" %>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Edit Organisation</h3>
+        <p class="card-description">Update organisation details and settings</p>
+      </div>
+      <div class="card-footer">
+        <%= link_to "Edit Organisation", edit_organisation_path(@organisation), class: "btn btn-secondary" %>
+      </div>
     </div>
     
     <% if current_user.organisation == @organisation %>
-    <div class="action-card">
-      <h3>Leave Organisation</h3>
-      <p>Leave this organisation (will delete your posts)</p>
-      <%= button_to "Leave Organisation", leave_organisation_path(@organisation), 
-                  data: { turbo_confirm: "Are you sure? This will delete all your posts." },
-                  class: "action-button danger" %>
-    </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Leave Organisation</h3>
+          <p class="card-description">Leave this organisation (will delete your posts)</p>
+        </div>
+        <div class="card-footer">
+          <%= button_to "Leave Organisation", leave_organisation_path(@organisation), 
+                      data: { turbo_confirm: "Are you sure? This will delete all your posts." },
+                      class: "btn btn-destructive" %>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
-
-<style>
-  .organisation-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .organisation-details {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-  }
-  
-  .action-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .action-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    flex: 1;
-    min-width: 250px;
-  }
-  
-  .action-card h3 {
-    margin-top: 0;
-    color: #333;
-  }
-  
-  .action-button {
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #5D5FEF;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-top: 10px;
-  }
-  
-  .action-button:hover {
-    background-color: #4B4DCF;
-  }
-  
-  .action-button.danger {
-    background-color: #dc3545;
-  }
-  
-  .action-button.danger:hover {
-    background-color: #bd2130;
-  }
-</style>

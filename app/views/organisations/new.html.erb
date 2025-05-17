@@ -1,38 +1,45 @@
-<h1>New Organisation</h1>
-
-<%= form_with(model: @organisation) do |form| %>
-  <% if @organisation.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(@organisation.errors.count, "error") %> prohibited this organisation from being saved:</h2>
-
-      <ul>
-        <% @organisation.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<div class="section">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="section-title">New Organisation</h1>
+    <div>
+      <%= link_to "Back to organisations", organisations_path, class: "btn btn-secondary" %>
     </div>
-  <% end %>
-
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
   </div>
 
-  <div>
-    <%= form.label :country %>
-    <%= form.text_field :country %>
-  </div>
+  <div class="card">
+    <div class="card-content">
+      <%= form_with(model: @organisation, class: "space-y-4") do |form| %>
+        <% if @organisation.errors.any? %>
+          <div class="alert alert-error mb-4">
+            <h3 class="text-base font-medium mb-2"><%= pluralize(@organisation.errors.count, "error") %> prohibited this organisation from being saved:</h3>
+            <ul class="list-disc pl-5">
+              <% @organisation.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-  <div>
-    <%= form.label :language %>
-    <%= form.text_field :language %>
-  </div>
+        <div class="form-group">
+          <%= form.label :name, class: "form-label" %>
+          <%= form.text_field :name, class: "input", required: true %>
+        </div>
 
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>
+        <div class="form-group">
+          <%= form.label :country, class: "form-label" %>
+          <%= form.text_field :country, class: "input" %>
+        </div>
 
-<div>
-  <%= link_to "Back to organisations", organisations_path %>
+        <div class="form-group">
+          <%= form.label :language, class: "form-label" %>
+          <%= form.text_field :language, class: "input" %>
+        </div>
+
+        <div class="flex justify-between gap-4 mt-6">
+          <%= form.submit "Create Organisation", class: "btn btn-primary" %>
+          <%= link_to "Cancel", organisations_path, class: "btn btn-outline" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
