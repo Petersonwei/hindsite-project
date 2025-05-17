@@ -1,8 +1,8 @@
 /* Base styles and resets */
 
 :root {
-  /* Colors - Hindsite theme */
-  --background: 0 0% 100%;
+  /* Colors - Enhanced Hindsite theme */
+  --background: 210 40% 98%;
   --foreground: 222 47% 11%;
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
@@ -28,14 +28,27 @@
   --dark-text: 0 0% 100%;
   --dark-accent: 47 100% 60%; /* Yellow accent */
 
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 25%));
+  --gradient-secondary: linear-gradient(135deg, hsl(47 100% 60%), hsl(39 100% 50%));
+  --gradient-dark: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 5%));
+  --gradient-accent: linear-gradient(135deg, hsl(47 100% 60%), hsl(47 100% 70%));
+  --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 40% 96.1%));
+
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.09);
+  --shadow-lg: 0 16px 24px rgba(0, 0, 0, 0.12);
   
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Toast */
+  --toast-success: 142 76% 36%;
+  --toast-error: 0 84% 60%;
+  --toast-warning: 38 92% 50%;
+  --toast-info: 221 83% 53%;
 }
 
 /* Global reset */
@@ -85,9 +98,14 @@ body {
   color: hsl(var(--accent));
 }
 
-/* Background colors */
+/* Background colors and gradients */
 .bg-primary {
   background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.bg-gradient-primary {
+  background: var(--gradient-primary);
   color: hsl(var(--primary-foreground));
 }
 
@@ -96,13 +114,28 @@ body {
   color: hsl(var(--secondary-foreground));
 }
 
+.bg-gradient-secondary {
+  background: var(--gradient-secondary);
+  color: hsl(var(--secondary-foreground));
+}
+
 .bg-dark {
   background-color: hsl(var(--dark-bg));
   color: hsl(var(--dark-text));
 }
 
+.bg-gradient-dark {
+  background: var(--gradient-dark);
+  color: hsl(var(--dark-text));
+}
+
 .bg-accent {
   background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.bg-gradient-accent {
+  background: var(--gradient-accent);
   color: hsl(var(--accent-foreground));
 }
 
@@ -142,4 +175,87 @@ a {
 
 a:hover {
   color: hsl(var(--accent));
+}
+
+/* Toast system */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 350px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background-color: hsl(var(--card));
+  box-shadow: var(--shadow-md);
+  animation: toast-slide-in 0.3s ease;
+  max-width: 100%;
+}
+
+.toast-success {
+  border-left: 4px solid hsl(var(--toast-success));
+}
+
+.toast-error {
+  border-left: 4px solid hsl(var(--toast-error));
+}
+
+.toast-warning {
+  border-left: 4px solid hsl(var(--toast-warning));
+}
+
+.toast-info {
+  border-left: 4px solid hsl(var(--toast-info));
+}
+
+.toast-icon {
+  font-size: 1.25rem;
+  margin-right: 0.75rem;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.toast-message {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.2s ease;
+}
+
+.toast-close:hover {
+  color: hsl(var(--foreground));
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 } 

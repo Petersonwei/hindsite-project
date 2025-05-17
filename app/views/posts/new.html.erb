@@ -6,18 +6,18 @@
   <div class="card">
     <div class="card-content">
       <%= form_with(model: @post, class: "space-y-4") do |form| %>
-        <% if @post.errors.any? %>
+    <% if @post.errors.any? %>
           <div class="alert alert-error mb-4">
             <h3 class="text-base font-medium mb-2"><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h3>
             <ul class="list-disc pl-5">
-              <% @post.errors.each do |error| %>
-                <li><%= error.full_message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
+          <% @post.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-        <div class="form-group">
+    <div class="form-group">
           <%= form.label :organisation_id, "Organization", class: "form-label" %>
           <% if @user_organisations.any? %>
             <%= form.collection_select :organisation_id, @user_organisations, :id, :name, 
@@ -31,10 +31,10 @@
         <div class="form-group">
           <%= form.label :description, class: "form-label" %>
           <%= form.text_area :description, class: "input", rows: 6, placeholder: "What's on your mind?" %>
-        </div>
+    </div>
 
         <div class="flex justify-between gap-4 mt-6">
-          <%= form.submit "Create Post", class: "btn btn-primary" %>
+      <%= form.submit "Create Post", class: "btn btn-primary" %>
           <%= link_to "Cancel", posts_path, class: "btn btn-outline" %>
         </div>
       <% end %>

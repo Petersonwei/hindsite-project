@@ -3,6 +3,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: hsl(var(--background));
 }
 
 main {
@@ -15,7 +16,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: hsl(var(--dark-bg));
+  background: var(--gradient-dark);
   border-bottom: 1px solid hsla(var(--dark-text) / 0.1);
   padding: 1rem 0;
   box-shadow: var(--shadow-md);
@@ -24,9 +25,20 @@ header {
 /* Footer */
 footer {
   padding: 2rem 0;
-  background-color: hsl(var(--dark-bg));
+  background: var(--gradient-dark);
   color: hsl(var(--dark-text));
   border-top: none;
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-secondary);
 }
 
 /* Page sections */
@@ -36,16 +48,42 @@ footer {
 
 .section-title {
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 1.5rem;
   color: hsl(var(--foreground));
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: var(--gradient-secondary);
+  border-radius: 2px;
 }
 
 .section-subtitle {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 1rem;
   color: hsl(var(--foreground));
+  position: relative;
+  display: inline-block;
+}
+
+.section-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: 1.5px;
 }
 
 .section-description {
@@ -58,7 +96,7 @@ footer {
 /* Hero section */
 .hero {
   padding: 4rem 0;
-  background-color: hsl(var(--dark-bg));
+  background: var(--gradient-dark);
   color: hsl(var(--dark-text));
   position: relative;
   overflow: hidden;
@@ -73,6 +111,11 @@ footer {
   object-fit: cover;
   opacity: 0.3;
   z-index: 0;
+  transition: transform 0.5s ease;
+}
+
+.hero:hover .hero-bg-image {
+  transform: scale(1.05);
 }
 
 .hero-content {
@@ -86,12 +129,15 @@ footer {
   font-weight: 700;
   margin-bottom: 1.5rem;
   color: hsl(var(--dark-text));
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .hero-description {
   font-size: 1.25rem;
   margin-bottom: 2rem;
   color: hsla(var(--dark-text) / 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .hero-actions {
@@ -114,12 +160,13 @@ footer {
 }
 
 .dashboard-sidebar {
-  background-color: hsl(var(--card));
+  background: var(--gradient-card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1.5rem;
   display: none;
   align-self: flex-start;
+  border-top: 4px solid hsl(var(--secondary));
 }
 
 @media (min-width: 1024px) {
@@ -170,12 +217,19 @@ footer {
 }
 
 .stat-card {
-  background-color: hsl(var(--card));
+  background: var(--gradient-card);
   border-radius: var(--radius);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+  border-top: 3px solid hsl(var(--primary));
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-title {
@@ -187,7 +241,7 @@ footer {
 
 .stat-value {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: hsl(var(--foreground));
 }
 
@@ -209,6 +263,11 @@ footer {
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
+  transition: transform 0.2s ease;
+}
+
+.mobile-menu-toggle:hover {
+  transform: scale(1.1);
 }
 
 @media (min-width: 768px) {
@@ -223,7 +282,7 @@ footer {
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: hsl(var(--dark-bg));
+  background: var(--gradient-dark);
   z-index: 30;
   padding: 2rem;
   display: flex;
@@ -250,6 +309,11 @@ footer {
   color: hsl(var(--dark-text));
   font-size: 1.5rem;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.mobile-menu-close:hover {
+  transform: scale(1.1);
 }
 
 .mobile-nav-links {
@@ -263,18 +327,31 @@ footer {
   text-decoration: none;
   font-size: 1.125rem;
   font-weight: 500;
-  padding: 0.5rem 0;
+  padding: 0.75rem 0;
   border-bottom: 1px solid hsla(var(--dark-text) / 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-nav-link i {
+  margin-right: 0.75rem;
+}
+
+.mobile-nav-link:hover {
+  padding-left: 0.5rem;
+  color: hsl(var(--secondary));
 }
 
 /* Auth pages */
 .auth-container {
-  max-width: 400px;
+  max-width: 440px;
   margin: 2rem auto;
-  padding: 2rem;
-  background-color: hsl(var(--card));
+  padding: 2.5rem;
+  background: var(--gradient-card);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
+  border-top: 4px solid hsl(var(--secondary));
 }
 
 .auth-logo {
@@ -283,8 +360,8 @@ footer {
 }
 
 .auth-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.75rem;
+  font-weight: 700;
   text-align: center;
   margin-bottom: 1.5rem;
 }
@@ -335,14 +412,34 @@ footer {
 .sidebar {
   padding: 1.5rem;
   border-radius: var(--radius);
-  background-color: hsl(var(--card));
+  background: var(--gradient-card);
   border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .sidebar-title {
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.sidebar-title::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--gradient-secondary);
+  border-radius: 1px;
 }
 
 .sidebar-nav {
@@ -352,23 +449,31 @@ footer {
 }
 
 .sidebar-link {
-  display: block;
-  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
   color: hsl(var(--muted-foreground));
   text-decoration: none;
   border-radius: var(--radius);
   transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.sidebar-link i {
+  margin-right: 0.75rem;
 }
 
 .sidebar-link:hover {
-  background-color: hsl(var(--accent));
+  background-color: hsl(var(--accent) / 0.1);
   color: hsl(var(--accent-foreground));
+  transform: translateX(5px);
 }
 
 .sidebar-link.active {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
+  background: var(--gradient-primary);
+  color: hsl(var(--primary-foreground));
   font-weight: 500;
+  box-shadow: var(--shadow-sm);
 }
 
 /* Page container */
