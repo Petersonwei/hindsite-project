@@ -2,6 +2,8 @@
 # HINDSIT Organisation Management App
 
 ## Core Features Implementation
+![Uploading image.png…]()
+
 
 ### 1. User Authentication
 ![image](https://github.com/user-attachments/assets/ea8a6a66-9dde-45eb-82fe-e04d5f4c075f)
