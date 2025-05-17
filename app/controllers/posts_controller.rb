@@ -89,7 +89,11 @@ class PostsController < ApplicationController
   end
 
   def update
-    authorize_user
+    if @post.user != current_user
+      flash[:alert] = "You are not authorized to perform this action."
+      redirect_to posts_path and return
+    end
+    
     if @post.update(post_params)
       redirect_to @post, notice: 'Post was successfully updated.'
     else
@@ -98,7 +102,11 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    authorize_user
+    if @post.user != current_user
+      flash[:alert] = "You are not authorized to perform this action."
+      redirect_to posts_path and return
+    end
+    
     @post.destroy
     redirect_to posts_path, notice: 'Post was successfully deleted.'
   end
@@ -116,7 +124,8 @@ class PostsController < ApplicationController
   def authorize_user
     unless @post.user == current_user
       flash[:alert] = "You are not authorized to perform this action."
-      redirect_to posts_path
+      redirect_to posts_path and return false
     end
+    true
   end
 end

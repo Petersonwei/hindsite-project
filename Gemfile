@@ -59,6 +59,9 @@ group :development, :test do
   
   # Swagger spec generation for testing API endpoints
   gem 'rswag-specs'
+  
+  # Controller testing
+  gem 'rails-controller-testing'
 end
 
 group :development do
