@@ -1,181 +1,69 @@
-<div class="users-container">
-  <div class="users-header">
-    <h1>Users</h1>
+<div class="section">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="section-title">Users</h1>
     <% if logged_in? %>
-      <%= link_to "New User", new_user_path, class: "new-user-button" %>
+      <%= link_to "New User", new_user_path, class: "btn btn-primary" %>
     <% end %>
   </div>
   
-  <div class="users-list">
+  <div class="grid sm:grid-cols-2 gap-4">
     <% @users.each do |user| %>
-      <div class="user-card">
-        <div class="user-info">
-          <h2><%= user.name %></h2>
-          <p><strong>Email:</strong> <%= user.email %></p>
-          <p>
-            <strong>Status:</strong> 
-            <% if user.active? %>
-              <span class="status-active">Active</span>
-            <% else %>
-              <span class="status-departed">Departed</span>
-            <% end %>
-          </p>
-          <p>
-            <strong>Organisation:</strong> 
-            <% if user.organisation %>
-              <%= user.organisation.name %>
-            <% else %>
-              <span class="no-org">Not a member of any organisation</span>
-            <% end %>
-          </p>
+      <div class="card">
+        <div class="card-content">
+          <h2 class="card-title mb-4"><%= user.name %></h2>
+          <div class="grid gap-2">
+            <div class="flex">
+              <div class="font-medium w-28">Email:</div>
+              <div class="text-foreground"><%= user.email %></div>
+            </div>
+            <div class="flex">
+              <div class="font-medium w-28">Status:</div>
+              <div>
+                <% if user.active? %>
+                  <span class="badge badge-primary">Active</span>
+                <% else %>
+                  <span class="badge badge-secondary">Departed</span>
+                <% end %>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="font-medium w-28">Organisation:</div>
+              <div class="text-foreground">
+                <% if user.organisation %>
+                  <%= user.organisation.name %>
+                <% else %>
+                  <span class="text-muted-foreground italic">Not a member of any organisation</span>
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
         
-        <div class="user-actions">
-          <% if current_user && current_user == user %>
-            <span class="user-status">This is you</span>
-          <% end %>
-          
-          <div class="action-buttons">
-            <%= link_to "View Profile", user, class: "user-button" %>
+        <div class="card-footer">
+          <div class="flex justify-between items-center w-full">
             <% if current_user && current_user == user %>
-              <%= link_to "Edit Profile", edit_user_path(user), class: "user-button primary" %>
-            <% elsif current_user && current_user.organisation.present? && current_user.organisation == user.organisation %>
-              <% if user.active? %>
-                <%= link_to "Mark as Departed", depart_user_path(user), class: "user-button warning", 
-                          data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this user as departed?" } %>
-              <% else %>
-                <%= link_to "Reactivate", reactivate_user_path(user), class: "user-button success", 
-                          data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user?" } %>
-              <% end %>
+              <span class="text-primary font-medium">This is you</span>
+            <% else %>
+              <span></span>
             <% end %>
+            
+            <div class="flex gap-2">
+              <%= link_to "View Profile", user, class: "btn btn-ghost btn-sm" %>
+              <% if current_user && current_user == user %>
+                <%= link_to "Edit Profile", edit_user_path(user), class: "btn btn-primary btn-sm" %>
+              <% elsif current_user && current_user.organisation.present? && current_user.organisation == user.organisation %>
+                <% if user.active? %>
+                  <%= link_to "Mark as Departed", depart_user_path(user), class: "btn btn-outline btn-sm", 
+                            data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this user as departed?" } %>
+                <% else %>
+                  <%= link_to "Reactivate", reactivate_user_path(user), class: "btn btn-secondary btn-sm", 
+                            data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user?" } %>
+                <% end %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
     <% end %>
   </div>
 </div>
-
-<style>
-  .users-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .users-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .new-user-button {
-    background-color: #5D5FEF;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-  }
-  
-  .new-user-button:hover {
-    background-color: #4B4DCF;
-  }
-  
-  .users-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 20px;
-  }
-  
-  .user-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .user-info {
-    flex-grow: 1;
-  }
-  
-  .user-info h2 {
-    margin-top: 0;
-    color: #333;
-  }
-  
-  .no-org {
-    color: #856404;
-    font-style: italic;
-  }
-  
-  .user-actions {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .user-status {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .user-button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: #f8f9fa;
-    color: #333;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .user-button:hover {
-    background-color: #e9ecef;
-  }
-  
-  .user-button.primary {
-    background-color: #5D5FEF;
-    color: white;
-  }
-  
-  .user-button.primary:hover {
-    background-color: #4B4DCF;
-  }
-  
-  .status-active {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .status-departed {
-    color: #6c757d;
-    font-style: italic;
-  }
-  
-  .user-button.warning {
-    background-color: #ffc107;
-    color: #212529;
-  }
-  
-  .user-button.warning:hover {
-    background-color: #e0a800;
-  }
-  
-  .user-button.success {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .user-button.success:hover {
-    background-color: #218838;
-  }
-</style>
