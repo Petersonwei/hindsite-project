@@ -1,52 +1,54 @@
-<div class="profile-container">
-  <div class="profile-header">
-    <h1><%= @user.name %>'s Profile</h1>
+<div class="section">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="section-title"><%= @user.name %>'s Profile</h1>
     <% if current_user && current_user == @user %>
-      <div class="profile-actions">
+      <div>
         <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-primary" %>
       </div>
     <% elsif current_user && current_user.organisation.present? && current_user.organisation == @user.organisation %>
-      <div class="profile-actions">
+      <div>
         <% if @user.active? %>
-          <%= link_to "Mark as Departed", depart_user_path(@user), class: "btn btn-warning", 
+          <%= link_to "Mark as Departed", depart_user_path(@user), class: "btn btn-outline", 
                         data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to mark this user as departed? Their posts will be moved to the departed posts section." } %>
         <% else %>
-          <%= link_to "Reactivate User", reactivate_user_path(@user), class: "btn btn-success", 
+          <%= link_to "Reactivate User", reactivate_user_path(@user), class: "btn btn-secondary", 
                         data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to reactivate this user? Their posts will be visible again in the main feed." } %>
         <% end %>
       </div>
     <% end %>
   </div>
 
-  <div class="profile-card">
-    <div class="profile-section">
-      <h3>Personal Information</h3>
-      <div class="profile-details">
-        <div class="detail-row">
-          <div class="detail-label">Name:</div>
-          <div class="detail-value"><%= @user.name %></div>
+  <div class="card mb-6">
+    <div class="card-header">
+      <h2 class="card-title">Personal Information</h2>
+    </div>
+    <div class="card-content">
+      <div class="grid gap-4">
+        <div class="flex">
+          <div class="font-medium w-32">Name:</div>
+          <div><%= @user.name %></div>
         </div>
-        <div class="detail-row">
-          <div class="detail-label">Email:</div>
-          <div class="detail-value"><%= @user.email %></div>
+        <div class="flex">
+          <div class="font-medium w-32">Email:</div>
+          <div><%= @user.email %></div>
         </div>
-        <div class="detail-row">
-          <div class="detail-label">Status:</div>
-          <div class="detail-value">
+        <div class="flex">
+          <div class="font-medium w-32">Status:</div>
+          <div>
             <% if @user.active? %>
-              <span class="status-active">Active</span>
+              <span class="badge badge-primary">Active</span>
             <% else %>
-              <span class="status-departed">Departed</span>
+              <span class="badge badge-secondary">Departed</span>
             <% end %>
           </div>
         </div>
-        <div class="detail-row">
-          <div class="detail-label">Organisation:</div>
-          <div class="detail-value">
+        <div class="flex">
+          <div class="font-medium w-32">Organisation:</div>
+          <div>
             <% if @user.organisation %>
               <%= @user.organisation.name %>
             <% else %>
-              <span class="no-org">Not a member of any organisation</span>
+              <span class="text-muted-foreground italic">Not a member of any organisation</span>
             <% end %>
           </div>
         </div>
@@ -55,20 +57,22 @@
   </div>
 
   <% if @user.posts.any? %>
-    <div class="user-posts">
-      <h3><%= @user.name %>'s Posts</h3>
-      <div class="posts-list">
+    <div class="mt-8">
+      <h2 class="section-title mb-4"><%= @user.name %>'s Posts</h2>
+      <div class="grid gap-4">
         <% @user.posts.order(created_at: :desc).each do |post| %>
-          <div class="post-card">
-            <div class="post-content">
-              <h4>Post #<%= post.id %></h4>
-              <p class="post-body"><%= post.description %></p>
-              <p class="post-date">Posted on <%= post.created_at.strftime("%B %d, %Y") %></p>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Post #<%= post.id %></h3>
+              <p class="text-xs text-muted-foreground">Posted on <%= post.created_at.strftime("%B %d, %Y") %></p>
+            </div>
+            <div class="card-content">
+              <p><%= post.description %></p>
             </div>
             <% if current_user && current_user == @user %>
-              <div class="post-actions">
-                <%= link_to "Edit", edit_post_path(post), class: "post-button" %>
-                <%= link_to "Delete", post, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "post-button delete" %>
+              <div class="card-footer">
+                <%= link_to "Edit", edit_post_path(post), class: "btn btn-ghost btn-sm" %>
+                <%= link_to "Delete", post, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-destructive btn-sm" %>
               </div>
             <% end %>
           </div>
@@ -76,191 +80,15 @@
       </div>
     </div>
   <% else %>
-    <div class="no-posts">
-      <p>No posts yet.</p>
+    <div class="card text-center p-6 mt-8">
+      <p class="text-muted-foreground mb-4">No posts yet.</p>
       <% if current_user && current_user == @user %>
         <%= link_to "Create a New Post", new_post_path, class: "btn btn-primary" %>
       <% end %>
     </div>
   <% end %>
 
-  <div class="back-link">
-    <%= link_to "Back to Users", users_path %>
+  <div class="mt-6">
+    <%= link_to "Back to Users", users_path, class: "btn btn-ghost" %>
   </div>
 </div>
-
-<style>
-  .profile-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-  }
-
-  .profile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-
-  .profile-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-  }
-
-  .profile-section h3 {
-    color: #333;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-  }
-
-  .profile-details {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .detail-row {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .detail-label {
-    font-weight: bold;
-    width: 120px;
-  }
-
-  .no-org {
-    color: #856404;
-    font-style: italic;
-  }
-
-  .user-posts {
-    margin-top: 40px;
-  }
-
-  .user-posts h3 {
-    margin-bottom: 20px;
-  }
-
-  .posts-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .post-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-
-  .post-content h4 {
-    margin-top: 0;
-    color: #333;
-  }
-
-  .post-body {
-    margin-bottom: 15px;
-  }
-
-  .post-date {
-    color: #666;
-    font-size: 14px;
-  }
-
-  .post-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 15px;
-  }
-
-  .post-button {
-    padding: 5px 10px;
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: #f8f9fa;
-    color: #333;
-  }
-
-  .post-button:hover {
-    background-color: #e9ecef;
-  }
-
-  .post-button.delete {
-    color: #dc3545;
-  }
-
-  .no-posts {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 30px;
-    text-align: center;
-    margin-top: 20px;
-  }
-
-  .btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    background-color: #5D5FEF;
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background-color: #4B4DCF;
-  }
-
-  .back-link {
-    margin-top: 30px;
-  }
-
-  .back-link a {
-    color: #5D5FEF;
-    text-decoration: none;
-  }
-
-  .back-link a:hover {
-    text-decoration: underline;
-  }
-
-  .status-active {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .status-departed {
-    color: #6c757d;
-    font-style: italic;
-  }
-  
-  .btn-warning {
-    background-color: #ffc107;
-    color: #212529;
-  }
-  
-  .btn-warning:hover {
-    background-color: #e0a800;
-  }
-  
-  .btn-success {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .btn-success:hover {
-    background-color: #218838;
-  }
-</style>

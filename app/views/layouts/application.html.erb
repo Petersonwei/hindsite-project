@@ -24,31 +24,53 @@
 
   <body>
     <header>
-      <nav>
-        <%= link_to "Hindsite", root_path %>
-        <div>
+      <nav class="navbar container">
+        <%= link_to "Hindsite", root_path, class: "navbar-brand" %>
+        <div class="nav-links">
           <% if logged_in? %>
-            <%= link_to "Posts", posts_path %>
-            <%= link_to "Organisations", organisations_path %>
-            <%= link_to "Users", users_path %>
-            <span>Logged in as: <%= current_user.name %></span>
-            <%= link_to "Logout", logout_path, data: { turbo_method: :delete } %>
+            <%= link_to "Posts", posts_path, class: "nav-link #{current_page?(posts_path) ? 'active' : ''}" %>
+            <%= link_to "Organisations", organisations_path, class: "nav-link #{controller_name == 'organisations' ? 'active' : ''}" %>
+            <%= link_to "Users", users_path, class: "nav-link #{controller_name == 'users' ? 'active' : ''}" %>
+            <span class="badge badge-outline ml-2">
+              <%= current_user.name %>
+            </span>
+            <%= link_to "Logout", logout_path, class: "btn btn-ghost ml-4", data: { turbo_method: :delete } %>
           <% else %>
-            <%= link_to "Login", login_path %>
-            <%= link_to "Sign Up", new_user_path %>
+            <%= link_to "Login", login_path, class: "btn btn-ghost" %>
+            <%= link_to "Sign Up", new_user_path, class: "btn btn-primary ml-2" %>
           <% end %>
         </div>
       </nav>
     </header>
 
-    <% flash.each do |type, message| %>
-      <div style="<%= type == 'alert' ? 'color: red;' : 'color: green;' %>">
-        <%= message %>
+    <% if flash.any? %>
+      <div class="container mt-4">
+        <% flash.each do |type, message| %>
+          <div class="alert <%= type == 'alert' ? 'alert-error' : 'alert-success' %>">
+            <%= message %>
+          </div>
+        <% end %>
       </div>
     <% end %>
 
     <main>
-      <%= yield %>
+      <div class="container">
+        <%= yield %>
+      </div>
     </main>
+
+    <footer>
+      <div class="container">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="mb-2">Hindsite</h3>
+            <p class="text-sm">Organisation Management System</p>
+          </div>
+          <div>
+            <p class="text-sm">&copy; <%= Date.today.year %> Hindsite Inc. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

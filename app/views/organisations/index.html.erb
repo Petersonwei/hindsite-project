@@ -1,134 +1,40 @@
-<div class="organisations-container">
-  <div class="organisations-header">
-    <h1>Organisations</h1>
+<div class="section">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="section-title">Organisations</h1>
     <% if logged_in? %>
-      <%= link_to "Create New Organisation", new_organisation_path, class: "new-org-button" %>
+      <%= link_to "Create New Organisation", new_organisation_path, class: "btn btn-primary" %>
     <% end %>
   </div>
   
   <% if current_user && current_user.organisation.nil? %>
-    <div class="info-box">
+    <div class="alert alert-info mb-6">
       <p>You are not currently a member of any organisation. Join an organisation to interact with other members and share posts.</p>
     </div>
   <% end %>
   
-  <div class="organisations-list">
+  <div class="grid sm:grid-cols-2 gap-4">
     <% @organisations.each do |org| %>
-      <div class="org-card">
-        <div class="org-info">
-          <h2><%= org.name %></h2>
-          <p><strong>Country:</strong> <%= org.country %></p>
-          <p><strong>Language:</strong> <%= org.language %></p>
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><%= org.name %></h2>
+          <p class="card-description">
+            <span class="badge badge-outline"><%= org.country %></span>
+            <span class="badge badge-outline ml-2"><%= org.language %></span>
+          </p>
         </div>
         
-        <div class="org-actions">
+        <div class="card-footer">
           <% if current_user && current_user.organisation == org %>
-            <span class="org-status">You are a member</span>
-            <%= link_to "View Details", org, class: "org-button" %>
+            <span class="badge badge-primary mr-2">Member</span>
+            <%= link_to "View Details", org, class: "btn btn-secondary" %>
           <% elsif current_user && current_user.organisation.nil? %>
-            <%= form_with(url: join_organisation_path(org), method: :post) do |form| %>
-              <%= form.submit "Join Organisation", class: "org-button primary" %>
-            <% end %>
+            <%= link_to "View Details", org, class: "btn btn-secondary mr-2" %>
+            <%= button_to "Join Organisation", join_organisation_path(org), method: :post, class: "btn btn-primary" %>
           <% else %>
-            <%= link_to "View Details", org, class: "org-button" %>
+            <%= link_to "View Details", org, class: "btn btn-secondary" %>
           <% end %>
         </div>
       </div>
     <% end %>
   </div>
 </div>
-
-<style>
-  .organisations-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .organisations-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .new-org-button {
-    background-color: #5D5FEF;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-  }
-  
-  .new-org-button:hover {
-    background-color: #4B4DCF;
-  }
-  
-  .info-box {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-  }
-  
-  .organisations-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 20px;
-  }
-  
-  .org-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .org-info {
-    flex-grow: 1;
-  }
-  
-  .org-info h2 {
-    margin-top: 0;
-    color: #333;
-  }
-  
-  .org-actions {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .org-status {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .org-button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    background-color: #f8f9fa;
-    color: #333;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .org-button:hover {
-    background-color: #e9ecef;
-  }
-  
-  .org-button.primary {
-    background-color: #5D5FEF;
-    color: white;
-  }
-  
-  .org-button.primary:hover {
-    background-color: #4B4DCF;
-  }
-</style>
