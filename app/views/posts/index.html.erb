@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="section-title">Posts</h1>
     <div class="flex gap-2">
-      <% if logged_in? && current_user.organisation.present? %>
+      <% if logged_in? && current_user.organisations.any? %>
         <%= link_to "View Departed Employee Posts", departed_posts_path, class: "btn btn-outline" %>
       <% end %>
       <% if logged_in? %>
@@ -20,10 +20,17 @@
     </div>
   <% end %>
 
-  <% if current_user.organisation.present? %>
+  <% if @user_organisations.present? && @user_organisations.any? %>
     <div class="card mb-6">
       <div class="card-content">
         <%= form_with url: posts_path, method: :get, class: "flex flex-col md:flex-row gap-4 items-end" do |form| %>
+          <div class="form-group m-0">
+            <%= form.label :organisation_id, "Organization:", class: "form-label" %>
+            <%= form.select :organisation_id, 
+                options_for_select(@user_organisations.map { |org| [org.name, org.id] }, params[:organisation_id] || @organisation&.id), 
+                {}, { class: "input" } %>
+          </div>
+          
           <div class="form-group m-0">
             <%= form.label :user_id, "Filter by Employee:", class: "form-label" %>
             <%= form.select :user_id, 
@@ -58,9 +65,7 @@
             <div class="flex justify-between items-center">
               <div>
                 <span class="font-medium"><%= post.user.name %></span>
-                <% if post.user.organisation.present? %>
-                  <span class="text-sm text-muted-foreground">from <%= post.user.organisation.name %></span>
-                <% end %>
+                <span class="text-sm text-muted-foreground">from <%= post.organisation.name %></span>
               </div>
               <span class="text-xs text-muted-foreground"><%= post.created_at.strftime("%B %d, %Y") %></span>
             </div>

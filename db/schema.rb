@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_010732) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_17_032726) do
   create_table "organisations", force: :cascade do |t|
     t.string "name"
     t.string "country"
@@ -24,7 +24,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_010732) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "organisation_id", null: false
+    t.index ["organisation_id"], name: "index_posts_on_organisation_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "user_organisations", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "organisation_id", null: false
+    t.boolean "is_primary", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id"], name: "index_user_organisations_on_organisation_id"
+    t.index ["user_id", "organisation_id"], name: "index_user_organisations_on_user_id_and_organisation_id", unique: true
+    t.index ["user_id"], name: "index_user_organisations_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -39,6 +52,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_010732) do
     t.index ["status"], name: "index_users_on_status"
   end
 
+  add_foreign_key "posts", "organisations"
   add_foreign_key "posts", "users"
+  add_foreign_key "user_organisations", "organisations"
+  add_foreign_key "user_organisations", "users"
   add_foreign_key "users", "organisations"
 end

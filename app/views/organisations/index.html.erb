@@ -6,12 +6,38 @@
     <% end %>
   </div>
   
-  <% if current_user && current_user.organisation.nil? %>
+  <% if current_user && current_user.organisations.empty? %>
     <div class="alert alert-info mb-6">
       <p>You are not currently a member of any organisation. Join an organisation to interact with other members and share posts.</p>
     </div>
   <% end %>
   
+  <% if @user_organisations.present? && @user_organisations.any? %>
+    <h2 class="section-subtitle mb-4">Your Organisations</h2>
+    <div class="grid sm:grid-cols-2 gap-4 mb-8">
+      <% @user_organisations.each do |org| %>
+        <div class="card border-l-4 <%= current_user.primary_organisation == org ? 'border-l-primary' : 'border-l-muted' %>">
+          <div class="card-header">
+            <h2 class="card-title"><%= org.name %></h2>
+            <p class="card-description">
+              <span class="badge badge-outline"><%= org.country %></span>
+              <span class="badge badge-outline ml-2"><%= org.language %></span>
+              <% if current_user.primary_organisation == org %>
+                <span class="badge badge-primary ml-2">Primary</span>
+              <% end %>
+            </p>
+          </div>
+          
+          <div class="card-footer">
+            <%= link_to "View Details", org, class: "btn btn-secondary" %>
+            <%= link_to "View Posts", posts_path(organisation_id: org.id), class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <h2 class="section-subtitle mb-4">All Organisations</h2>
   <div class="grid sm:grid-cols-2 gap-4">
     <% @organisations.each do |org| %>
       <div class="card">
@@ -24,10 +50,9 @@
         </div>
         
         <div class="card-footer">
-          <% if current_user && current_user.organisation == org %>
-            <span class="badge badge-primary mr-2">Member</span>
+          <% if current_user && current_user.organisations.include?(org) %>
             <%= link_to "View Details", org, class: "btn btn-secondary" %>
-          <% elsif current_user && current_user.organisation.nil? %>
+          <% elsif current_user %>
             <%= link_to "View Details", org, class: "btn btn-secondary mr-2" %>
             <%= button_to "Join Organisation", join_organisation_path(org), method: :post, class: "btn btn-primary" %>
           <% else %>

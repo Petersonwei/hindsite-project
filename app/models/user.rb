@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   belongs_to :organisation, optional: true
+  has_many :user_organisations, dependent: :destroy
+  has_many :organisations, through: :user_organisations
   has_many :posts, dependent: :destroy
   
   has_secure_password
@@ -10,6 +12,19 @@ class User < ApplicationRecord
   
   scope :active, -> { where(status: 'active') }
   scope :departed, -> { where(status: 'departed') }
+  
+  def primary_organisation
+    user_organisations.find_by(is_primary: true)&.organisation || organisation
+  end
+  
+  def primary_organisation=(org)
+    return unless org
+    
+    user_organisations.where(is_primary: true).update_all(is_primary: false)
+    
+    user_org = user_organisations.find_or_create_by(organisation: org)
+    user_org.update(is_primary: true)
+  end
   
   def active?
     status == 'active'
@@ -28,6 +43,6 @@ class User < ApplicationRecord
   end
   
   def organisation_name
-    organisation&.name
+    primary_organisation&.name
   end
 end

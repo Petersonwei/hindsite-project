@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :organisations do
     post 'leave', on: :member, as: :leave
     post 'join', on: :member, as: :join
+    patch 'set_primary', on: :member, as: :set_primary
   end
   resources :users do
     patch 'depart', on: :member
