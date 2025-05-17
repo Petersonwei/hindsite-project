@@ -19,14 +19,15 @@
       <%= link_to "Edit Organisation", edit_organisation_path(@organisation), class: "action-button" %>
     </div>
     
+    <% if current_user.organisation == @organisation %>
     <div class="action-card">
       <h3>Leave Organisation</h3>
       <p>Leave this organisation (will delete your posts)</p>
-      <%= link_to "Leave Organisation", leave_organisation_path(@organisation), 
-                  method: :post, 
+      <%= button_to "Leave Organisation", leave_organisation_path(@organisation), 
                   data: { turbo_confirm: "Are you sure? This will delete all your posts." },
                   class: "action-button danger" %>
     </div>
+    <% end %>
   </div>
 </div>
 
