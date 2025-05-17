@@ -1,9 +1,6 @@
 <div class="auth-form-container">
   <div class="auth-logo">
-    <h1 class="text-3xl font-bold">
-      <span class="text-primary">HIND</span><span class="text-secondary">SITE</span>
-      <span class="text-sm align-super">INC.</span>
-    </h1>
+    <img src="/HINDSITE-NAV.svg" alt="Hindsite Logo" style="height: 50px;">
   </div>
 
   <h2 class="auth-title">Welcome Back</h2>
@@ -32,16 +29,6 @@
       <%= form.submit "Sign In", class: "btn btn-primary" %>
     </div>
   <% end %>
-
-  <div class="auth-divider">
-    <span class="auth-divider-text">OR</span>
-  </div>
-
-  <div class="mt-4">
-    <button class="btn btn-outline w-full">
-      <i class="fas fa-building mr-2"></i> Sign in with Organization Code
-    </button>
-  </div>
 
   <div class="auth-footer">
     <p>Don't have an account? <%= link_to "Create account", new_user_path, class: "font-medium hover:text-secondary" %></p>
