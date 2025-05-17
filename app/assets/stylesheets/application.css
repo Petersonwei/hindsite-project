@@ -14,3 +14,9 @@
 @import "base.css";
 @import "components.css";
 @import "layout.css";
+
+/* Fix for button_to forms to display inline */
+form.button_to {
+  display: inline-block;
+  margin: 0;
+}

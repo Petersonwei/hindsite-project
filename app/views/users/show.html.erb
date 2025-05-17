@@ -86,7 +86,10 @@
             <% if current_user && current_user == @user %>
               <div class="card-footer">
                 <%= link_to "Edit", edit_post_path(post), class: "btn btn-ghost btn-sm" %>
-                <%= link_to "Delete", post, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-destructive btn-sm" %>
+                <%= button_to "Delete", post_path(post), 
+                              method: :delete, 
+                              form: { data: { turbo_confirm: "Are you sure?" } },
+                              class: "btn btn-destructive btn-sm" %>
               </div>
             <% end %>
           </div>
