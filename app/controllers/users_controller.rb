@@ -17,6 +17,14 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     
     if @user.save
+      # Create user_organisation record if organisation_id is present
+      if params[:user][:organisation_id].present?
+        organisation = Organisation.find_by(id: params[:user][:organisation_id])
+        if organisation
+          @user.user_organisations.create(organisation: organisation, is_primary: true)
+        end
+      end
+      
       session[:user_id] = @user.id
       redirect_to @user, notice: 'User was successfully created.'
     else
@@ -37,15 +45,25 @@ class UsersController < ApplicationController
       end
     end
     
-    # Set user_update_params without current_password
-    user_update_params = params.require(:user).permit(:name, :email, :password, :password_confirmation, :organisation_id)
+    # Set user_update_params without current_password and remove organisation_id for separate handling
+    user_update_params = params.require(:user).permit(:name, :email, :password, :password_confirmation)
     
     # If password is blank, don't update it
     if user_update_params[:password].blank?
       user_update_params = user_update_params.except(:password, :password_confirmation)
     end
     
-    if @user.update(user_update_params)
+    # Handle organisation changes separately from basic user fields
+    organisation_updated = false
+    if params[:user][:organisation_id].present?
+      organisation = Organisation.find_by(id: params[:user][:organisation_id])
+      if organisation && !@user.organisations.include?(organisation)
+        @user.user_organisations.create(organisation: organisation, is_primary: true)
+        organisation_updated = true
+      end
+    end
+    
+    if @user.update(user_update_params) || organisation_updated
       redirect_to @user, notice: 'User was successfully updated.'
     else
       render :edit, status: :unprocessable_entity

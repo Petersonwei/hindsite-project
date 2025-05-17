@@ -30,6 +30,37 @@
     </div>
 
     <div class="form-section">
+      <h3>Organizations</h3>
+      <% if @user.organisations.any? %>
+        <div class="current-orgs">
+          <p class="form-hint">You currently belong to these organizations:</p>
+          <ul class="org-list">
+            <% @user.organisations.each do |org| %>
+              <li>
+                <%= org.name %>
+                <% if @user.primary_organisation == org %>
+                  <span class="badge primary">Primary</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      
+      <div class="form-group">
+        <%= form.label :organisation_id, "Join a new organization" %>
+        <%= form.collection_select :organisation_id, 
+                                  Organisation.where.not(id: @user.organisations.pluck(:id)), 
+                                  :id, :name, 
+                                  { prompt: "Select an organisation to join" }, 
+                                  { class: "form-control" } %>
+        <span class="field-info">This will be set as your primary organization</span>
+      </div>
+      
+      <p class="form-hint">You can manage all your organizations from the <a href="/organisations" class="text-link">Organizations page</a>.</p>
+    </div>
+
+    <div class="form-section">
       <h3>Change Password</h3>
       <p class="form-hint">Leave blank if you don't want to change your password</p>
       
@@ -138,5 +169,41 @@
     padding: 15px;
     border-radius: 4px;
     margin-bottom: 20px;
+  }
+  
+  .org-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .org-list li {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .badge {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background-color: #e0e0e0;
+  }
+  
+  .badge.primary {
+    background-color: #5D5FEF;
+    color: white;
+  }
+  
+  .text-link {
+    color: #5D5FEF;
+    text-decoration: none;
+  }
+  
+  .text-link:hover {
+    text-decoration: underline;
   }
 </style>
