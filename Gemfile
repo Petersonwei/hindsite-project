@@ -55,7 +55,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
   
   # Testing with RSpec
-  gem 'rspec-rails', '~> 6.1.0'
+  gem 'rspec-rails', '~> 8.0.0'
   
   # Swagger spec generation for testing API endpoints
   gem 'rswag-specs'
